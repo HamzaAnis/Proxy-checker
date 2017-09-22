@@ -4,9 +4,71 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Proxy_Checker"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="700" Width="1200">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Card.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.CheckBox.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Flipper.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Popupbox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
     <Grid>
-        
+        <StackPanel Margin="8 8 0 0">
+            <StackPanel Orientation="Horizontal" Margin="0 32 0 0">
+                <Button Style="{DynamicResource MaterialDesignRaisedButton}"
+                        Margin="16 0 0 0"
+                        materialDesign:ShadowAssist.ShadowDepth="Depth5">
+                    DEPTH 5
+                </Button>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0 32 0 0">
+                <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3"
+                                     materialDesign:ShadowAssist.ShadowEdges="Bottom,Right" Padding="32">
+                    CUSTOM CLIP
+                </materialDesign:Card>
+                <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3"
+                                     materialDesign:ShadowAssist.ShadowEdges="Top" Margin="16 0 0 0" Padding="32">
+                    CUSTOM CLIP
+                </materialDesign:Card>
+                <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3"
+                                     materialDesign:ShadowAssist.ShadowEdges="Bottom,Left" Margin="16 0 0 0"
+                                     Padding="32">
+                    CUSTOM CLIP
+                </materialDesign:Card>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel>
+            <materialDesign:Flipper Style="{StaticResource MaterialDesignCardFlipper}" Margin="4 600 0 0"
+                                    IsFlippedChanged="Flipper_OnIsFlippedChanged">
+                <materialDesign:Flipper.FrontContent>
+
+                    <Button Style="{StaticResource MaterialDesignFlatButton}"
+                            Command="{x:Static materialDesign:Flipper.FlipCommand}"
+                            Margin="3"
+                            Width="150"
+                            Content="Powered By!" />
+                </materialDesign:Flipper.FrontContent>
+                <materialDesign:Flipper.BackContent>
+                    <Button Style="{StaticResource MaterialDesignFlatButton}"
+                            Command="{x:Static materialDesign:Flipper.FlipCommand}"
+                            Margin="8"
+                            Width="184"
+                            Content="Brothers Tech. Services ®" />
+                </materialDesign:Flipper.BackContent>
+            </materialDesign:Flipper>
+        </StackPanel>
+
     </Grid>
 </Window>

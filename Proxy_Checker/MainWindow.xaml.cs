@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,6 +25,22 @@ namespace Proxy_Checker
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void Flipper_OnIsFlippedChanged(object sender, RoutedPropertyChangedEventArgs<bool> e)
+        {
+            Task.Run(() =>
+            {
+                if (e.NewValue)
+                {
+                    Thread.Sleep(1000);
+                    Process.Start("https://www.freelancer.com/u/khurram4225");
+                }
+            });
         }
     }
 }
