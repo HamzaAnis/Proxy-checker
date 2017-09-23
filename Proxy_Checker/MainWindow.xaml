@@ -29,7 +29,11 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
 
             </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="TextBlock" BasedOn="{StaticResource MaterialDesignCaptionTextBlock}" x:Key="Caption">
+                <Setter Property="Opacity" Value=".68"></Setter>
+            </Style>
         </ResourceDictionary>
+        
     </Window.Resources>
 
     <Grid>
@@ -74,8 +78,12 @@
         </StackPanel>
         <StackPanel Grid.Row="0" HorizontalAlignment="Stretch" Height="670" Margin="0,0,-0.4,0.4"
                     VerticalAlignment="Bottom" Grid.RowSpan="2">
+          
             <ProgressBar x:Name="prgrsBar" IsIndeterminate="False" Margin="24,600,23.6,24" />
         </StackPanel>
+        <ScrollViewer>
+            <TextBlock Style="{StaticResource MaterialDesignSubheadingTextBlock}" Height="502" TextWrapping="Wrap" Text="TextBox" Margin="300,100,10,0"></TextBlock>
+        </ScrollViewer>
 
 
         <Button Style="{DynamicResource MaterialDesignRaisedDarkButton}"
