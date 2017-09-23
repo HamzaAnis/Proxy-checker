@@ -24,6 +24,9 @@
                     Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Popupbox.xaml" />
                 <ResourceDictionary
                     Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ProgressBar.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Slider.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
 
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -42,15 +45,12 @@
                         Click="Button_Click_1" />
             </StackPanel>
             <GroupBox Header="Threads" Style="{DynamicResource MaterialDesignGroupBox}" Margin="16,28,535.6,16"
-                      materialDesign:ShadowAssist.ShadowDepth="Depth3" BorderThickness="0.5" Height="108" />
-            <GroupBox Header="Start/Stop" Style="{DynamicResource MaterialDesignGroupBox}" Margin="16,25,535.6,16"
-                      materialDesign:ShadowAssist.ShadowDepth="Depth3" BorderThickness="0.5" Height="168" />
-
-            <GroupBox Header="Transparent Background" Style="{DynamicResource MaterialDesignGroupBox}" Margin="16,16,535.6,16"
-                      UseLayoutRounding="True" SnapsToDevicePixels="True" Height="174">
-                <Label Content="              Check:&#xD;&#xA;            Remain: &#xD;&#xA;               Good:&#xD;&#xA;              Errors:&#xD;&#xA;" Margin="0,10,0,0" VerticalAlignment="Top"/>
-
+                      materialDesign:ShadowAssist.ShadowDepth="Depth3" BorderThickness="0.5" Height="108" >
+                <TextBox Grid.Row="4" Grid.Column="1" materialDesign:HintAssist.Hint="Threads" 
+                 Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="0,0,0,22" Width="159" TextChanged="TextBox_TextChanged" />
             </GroupBox>
+            <GroupBox Header="Start/Stop" Style="{DynamicResource MaterialDesignGroupBox}" Margin="16,25,535.6,16"
+                      materialDesign:ShadowAssist.ShadowDepth="Depth3" BorderThickness="0.5" Height="168" ></GroupBox>
         </StackPanel>
         <StackPanel Margin="0,0,-0.4,0.4" Grid.RowSpan="2">
             <materialDesign:Flipper Style="{StaticResource MaterialDesignCardFlipper}" Margin="580 610 0 0"
@@ -76,6 +76,8 @@
                     VerticalAlignment="Bottom" Grid.RowSpan="2">
             <ProgressBar x:Name="prgrsBar" IsIndeterminate="False" Margin="24,600,23.6,24" />
         </StackPanel>
+
+
         <Button Style="{DynamicResource MaterialDesignRaisedDarkButton}"
             Margin="35,273,543.6,156"
             materialDesign:ShadowAssist.ShadowDepth="Depth3" Content="Start"
@@ -84,62 +86,8 @@
             Margin="35,327,543.6,102"
             materialDesign:ShadowAssist.ShadowDepth="Depth3" Content="Stop"
             Height="Auto" />
-        <materialDesign:DialogHost DialogClosing="Sample1_DialogHost_OnDialogClosing"
-                                Grid.Column="0" Margin="100 1 0 80"  Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <materialDesign:DialogHost.DialogContent>
-                <StackPanel Margin="16">
-                    <TextBlock>Add a new fruit.</TextBlock>
-                    <TextBox Margin="0 8 0 0" HorizontalAlignment="Stretch" x:Name="FruitTextBox" />
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" >
-                        <Button Style="{StaticResource MaterialDesignFlatButton}"
-                                        IsDefault="True"
-                                        Margin="0 8 8 0"
-                                        Command="materialDesign:DialogHost.CloseDialogCommand">
-                            <Button.CommandParameter>
-                                <system:Boolean>True</system:Boolean>
-                            </Button.CommandParameter>
-                            ACCEPT
-                        </Button>
-                        <Button Style="{StaticResource MaterialDesignFlatButton}"
-                                        IsCancel="True"
-                                        Margin="0 8 8 0"
-                                        Command="materialDesign:DialogHost.CloseDialogCommand">
-                            <Button.CommandParameter>
-                                <system:Boolean>False</system:Boolean>
-                            </Button.CommandParameter>
-                            CANCEL
-                        </Button>
-                    </StackPanel>
-                </StackPanel>
-            </materialDesign:DialogHost.DialogContent>
-            <Border BorderThickness="1" BorderBrush="{DynamicResource PrimaryHueMidBrush}"
-                            MinWidth="300" MinHeight="300" ClipToBounds="True">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <ListBox x:Name="FruitListBox">
-                        <ListBoxItem Content="Apple"/>
-                        <ListBoxItem Content="Banana"/>
-                        <ListBoxItem Content="Pear"/>
-                    </ListBox>
-                    <materialDesign:ColorZone Mode="PrimaryMid" Grid.Row="1" Effect="{DynamicResource MaterialDesignShadowDepth5}">
-                        <TextBlock Margin="16">Fruit Bowl</TextBlock>
-                    </materialDesign:ColorZone>
-                    <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"                                
-                                    Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
-                                    VerticalAlignment="Bottom" HorizontalAlignment="Right" 
-                                    Grid.Row="0" Margin="0 0 28 -20">
-                        <Viewbox Width="22" Height="22">
-                            <Canvas Width="24" Height="24">
-                                <Path Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" Fill="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Button}, Path=Foreground}" />
-                            </Canvas>
-                        </Viewbox>
-                    </Button>
-                </Grid>
-            </Border>
-        </materialDesign:DialogHost>
-
+        <Border BorderBrush="Gainsboro" BorderThickness="1" HorizontalAlignment="Left" Height="184" Margin="25,402,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Width="233">
+            <Label Content="Statistics:&#xD;&#xA;&#xD;&#xA;     Checking:&#xD;&#xA;        Remain: &#xD;&#xA;           Good:&#xD;&#xA;              Bad:&#xD;&#xA;           Errors:"/>
+        </Border>
     </Grid>
 </Window>

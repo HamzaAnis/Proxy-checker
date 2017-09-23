@@ -31,8 +31,8 @@ namespace Proxy_Checker
 
             if (!Equals(dialogClosingEventArgs.Parameter, true)) return;
 
-            if (!string.IsNullOrWhiteSpace(FruitTextBox.Text))
-//                FruitListBox.Items.Add(string.Format("{0}   |   {1}", FruitTextBox.Text, "Hamza Ains"));
+//            if (!string.IsNullOrWhiteSpace(FruitTextBox.Text))
+//                FruitListBox.Items.Add(string.Format("{0}  |   {1}", FruitTextBox.Text, "Hamza Ains"));
 //            FruitListBox.Items.Add("Column3Text").SubItems.AddRange(new string[] { "col1;row3", "col2;row3", "col3;row3" });
 
 
@@ -52,6 +52,11 @@ namespace Proxy_Checker
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
         }
     }
 }
