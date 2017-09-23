@@ -16,3 +16,4 @@ C:\Users\hamza\documents\visual studio 2017\Projects\Proxy_Checker\Proxy_Checker
 C:\Users\hamza\documents\visual studio 2017\Projects\Proxy_Checker\Proxy_Checker\obj\Debug\Proxy_Checker.csproj.GenerateResource.Cache
 C:\Users\hamza\documents\visual studio 2017\Projects\Proxy_Checker\Proxy_Checker\obj\Debug\Proxy_Checker.exe
 C:\Users\hamza\documents\visual studio 2017\Projects\Proxy_Checker\Proxy_Checker\obj\Debug\Proxy_Checker.pdb
+C:\Users\hamza\documents\visual studio 2017\Projects\Proxy_Checker\Proxy_Checker\obj\Debug\Proxy_Checker.csprojResolveAssemblyReference.cache

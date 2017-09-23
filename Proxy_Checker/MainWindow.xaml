@@ -24,16 +24,19 @@
                     Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Popupbox.xaml" />
                 <ResourceDictionary
                     Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ProgressBar.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Slider.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Slider.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
 
             </ResourceDictionary.MergedDictionaries>
             <Style TargetType="TextBlock" BasedOn="{StaticResource MaterialDesignCaptionTextBlock}" x:Key="Caption">
-                <Setter Property="Opacity" Value=".68"></Setter>
+                <Setter Property="Opacity" Value=".68" />
             </Style>
         </ResourceDictionary>
-        
+
     </Window.Resources>
 
     <Grid>
@@ -49,12 +52,13 @@
                         Click="Button_Click_1" />
             </StackPanel>
             <GroupBox Header="Threads" Style="{DynamicResource MaterialDesignGroupBox}" Margin="16,28,535.6,16"
-                      materialDesign:ShadowAssist.ShadowDepth="Depth3" BorderThickness="0.5" Height="108" >
-                <TextBox Grid.Row="4" Grid.Column="1" materialDesign:HintAssist.Hint="Threads" 
-                 Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="0,0,0,22" Width="159" TextChanged="TextBox_TextChanged" />
+                      materialDesign:ShadowAssist.ShadowDepth="Depth3" BorderThickness="0.5" Height="108">
+                <TextBox Grid.Row="4" Grid.Column="1" materialDesign:HintAssist.Hint="Threads"
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="0,0,0,22" Width="159"
+                         TextChanged="TextBox_TextChanged" />
             </GroupBox>
             <GroupBox Header="Start/Stop" Style="{DynamicResource MaterialDesignGroupBox}" Margin="16,25,535.6,16"
-                      materialDesign:ShadowAssist.ShadowDepth="Depth3" BorderThickness="0.5" Height="168" ></GroupBox>
+                      materialDesign:ShadowAssist.ShadowDepth="Depth3" BorderThickness="0.5" Height="168" />
         </StackPanel>
         <StackPanel Margin="0,0,-0.4,0.4" Grid.RowSpan="2">
             <materialDesign:Flipper Style="{StaticResource MaterialDesignCardFlipper}" Margin="580 610 0 0"
@@ -78,24 +82,34 @@
         </StackPanel>
         <StackPanel Grid.Row="0" HorizontalAlignment="Stretch" Height="670" Margin="0,0,-0.4,0.4"
                     VerticalAlignment="Bottom" Grid.RowSpan="2">
-          
+
             <ProgressBar x:Name="prgrsBar" IsIndeterminate="False" Margin="24,600,23.6,24" />
         </StackPanel>
-        <ScrollViewer>
-            <TextBlock Style="{StaticResource MaterialDesignSubheadingTextBlock}" Height="502" TextWrapping="Wrap" Text="TextBox" Margin="300,100,10,0"></TextBlock>
+        <ScrollViewer BorderThickness="5">
+            <!--            <Border BorderThickness="1" >-->
+            <TextBlock Style="{StaticResource MaterialDesignSubheadingTextBlock}" Height="455" TextWrapping="Wrap"
+                           Text="TextBox" Margin="300,70,10,0" />
+            <!--            </Border>-->
+
         </ScrollViewer>
+        <Button Style="{StaticResource MaterialDesignRaisedAccentButton}"
+                ToolTip="Resource name: MaterialDesignRaisedAccentButton" Margin="315,18,405.6,405" Content="Text" Height="Auto" />
+        <Button Style="{StaticResource MaterialDesignRaisedAccentButton}"
+                ToolTip="Resource name: MaterialDesignRaisedAccentButton" Margin="405,18,315.6,405" Content="List" Height="Auto" />
 
 
         <Button Style="{DynamicResource MaterialDesignRaisedDarkButton}"
-            Margin="35,273,543.6,156"
-            materialDesign:ShadowAssist.ShadowDepth="Depth3" Content="Start"
-            Height="Auto" />
+                Margin="35,273,543.6,156"
+                materialDesign:ShadowAssist.ShadowDepth="Depth3" Content="Start"
+                Height="Auto" />
         <Button Style="{DynamicResource MaterialDesignRaisedLightButton}"
-            Margin="35,327,543.6,102"
-            materialDesign:ShadowAssist.ShadowDepth="Depth3" Content="Stop"
-            Height="Auto" />
-        <Border BorderBrush="Gainsboro" BorderThickness="1" HorizontalAlignment="Left" Height="184" Margin="25,402,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Width="233">
-            <Label Content="Statistics:&#xD;&#xA;&#xD;&#xA;     Checking:&#xD;&#xA;        Remain: &#xD;&#xA;           Good:&#xD;&#xA;              Bad:&#xD;&#xA;           Errors:"/>
+                Margin="35,327,543.6,102"
+                materialDesign:ShadowAssist.ShadowDepth="Depth3" Content="Stop"
+                Height="Auto" />
+        <Border BorderBrush="Gainsboro" BorderThickness="1" HorizontalAlignment="Left" Height="184" Margin="25,402,0,0"
+                Grid.RowSpan="2" VerticalAlignment="Top" Width="233">
+            <Label
+                Content="Statistics:&#xD;&#xA;&#xD;&#xA;     Checking:&#xD;&#xA;        Remain: &#xD;&#xA;           Good:&#xD;&#xA;              Bad:&#xD;&#xA;           Errors:" />
         </Border>
     </Grid>
 </Window>
