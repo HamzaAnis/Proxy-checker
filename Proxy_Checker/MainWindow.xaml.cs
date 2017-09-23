@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,9 +14,26 @@ namespace Proxy_Checker
     /// <summary>
     ///     Interaction logic for MainWindow.xaml
     /// </summary>
+    public class Proxy
+    {
+        public string IP;
+        public string Port;
+        public bool IsOpen;
+        public bool IsSmptOpen;
+
+        public Proxy()
+        {
+            IP = "";
+            Port = "";
+            IsOpen = false;
+            IsSmptOpen = false;
+        }
+    }
+
     public partial class MainWindow : Window
     {
         private string filename;
+        public List<Proxy> database = new List<Proxy>();
 
         public MainWindow()
         {
@@ -68,22 +87,33 @@ namespace Proxy_Checker
                 filename = dlg.FileName;
                 btnFileLoad.Content = dlg.SafeFileName;
                 Task.Run(() =>
-                {
-                    string line;
-                    Dispatcher.Invoke(() =>
                     {
-                        txtbox_Proxydetails.Text = "";
-                        System.IO.StreamReader file =
-                            new System.IO.StreamReader(filename);
-                        while ((line = file.ReadLine()) != null)
+                        string line;
+                        Dispatcher.Invoke(() =>
                         {
-                            txtbox_Proxydetails.Text += line + "\n";
-//                            Console.WriteLine(line);
-                        }
-
-                        file.Close();
-                    });
-                });
+                            txtbox_Proxydetails.Text = "";
+                            System.IO.StreamReader file =
+                                new System.IO.StreamReader(filename);
+                            while ((line = file.ReadLine()) != null)
+                            {
+                                Proxy temp = new Proxy();
+                                temp.IP = line;
+                                database.Add(temp);
+//                            txtbox_Proxydetails.Text += line + "\n";
+////                            Console.WriteLine(line);
+                            }
+                            file.Close();
+                            Console.WriteLine("The number of Proxies are " + database.Count);
+                            Task.Run(() =>
+                            {
+                                for (int i = 0; i < database.Count; i++)
+                                {
+                                    Dispatcher.Invoke(() => { txtbox_Proxydetails.Text += database[i].IP + "\n"; });
+                                }
+                            });
+                        });
+                    })
+                    ;
             }
         }
     }
