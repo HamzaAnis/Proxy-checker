@@ -110,14 +110,43 @@ namespace Proxy_Checker
                     {
                         for (int i = 0; i < database.Count; i++)
                         {
-                            Dispatcher.Invoke(() =>
-                            {
-                                txtbox_Proxydetails.Items.Add(database[i].IP+ ":"+database[i].Port);
-                            });
+                            Dispatcher.Invoke(
+                                () => { txtbox_Proxydetails.Items.Add(database[i].IP + ":" + database[i].Port); });
                         }
                     });
                 });
             }
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            Task.Run(() =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    txtbox_Proxydetails.Items.Clear();
+                    for (int i = 0; i < database.Count; i++)
+                    {
+                        txtbox_Proxydetails.Items.Add(database[i].IP+":"+database[i].Port);
+                    }
+                });
+            });
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            Task.Run(() =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    txtbox_Proxydetails.Items.Clear();
+                    txtbox_Proxydetails.Items.Add($"{"IP",10}{"PORT",10}");
+                    for (int i = 0; i < database.Count; i++)
+                    {
+                        txtbox_Proxydetails.Items.Add($"{database[i].IP,15}{database[i].Port,15}");
+                    }
+                });
+            });
         }
     }
 }

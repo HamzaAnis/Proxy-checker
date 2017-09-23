@@ -106,10 +106,10 @@
         </Grid>
         <Button Style="{StaticResource MaterialDesignRaisedAccentButton}"
                 ToolTip="Resource name: MaterialDesignRaisedAccentButton" Margin="315,18,206,405" Content="Text"
-                Height="Auto" />
+                Height="Auto" Click="Button_Click_1" />
         <Button Style="{StaticResource MaterialDesignRaisedAccentButton}"
                 ToolTip="Resource name: MaterialDesignRaisedAccentButton" Margin="405,18,116,405" Content="List"
-                Height="Auto" />
+                Height="Auto" Click="Button_Click_2" />
 
 
         <Button Style="{DynamicResource MaterialDesignRaisedDarkButton}"
