@@ -91,11 +91,17 @@
         </StackPanel>
         <Grid Grid.ColumnSpan="2" Margin="263,94,34.6,10">
             <ScrollViewer BorderThickness="5" Margin="0,0,0,0">
-                <TextBlock x:Name="txtbox_Proxydetails" Style="{StaticResource MaterialDesignSubheadingTextBlock}"
-                           Margin="0,0,0,0"
-                           ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                           ScrollViewer.VerticalScrollBarVisibility="Auto"
-                           ScrollViewer.CanContentScroll="True" />
+                <!--                <TextBlock x:Name="txtbox_Proxydetails" Style="{StaticResource MaterialDesignSubheadingTextBlock}"-->
+                <!--                           Margin="0,0,0,0"-->
+                <!--                           ScrollViewer.HorizontalScrollBarVisibility="Auto"-->
+                <!--                           ScrollViewer.VerticalScrollBarVisibility="Auto"-->
+                <!--                           ScrollViewer.CanContentScroll="True" />-->
+
+                <ListBox ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                         ScrollViewer.CanContentScroll="True"
+                         x:Name="txtbox_Proxydetails">
+                    </ListBox>
             </ScrollViewer>
         </Grid>
         <Button Style="{StaticResource MaterialDesignRaisedAccentButton}"

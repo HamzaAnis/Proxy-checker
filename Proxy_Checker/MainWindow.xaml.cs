@@ -87,33 +87,36 @@ namespace Proxy_Checker
                 filename = dlg.FileName;
                 btnFileLoad.Content = dlg.SafeFileName;
                 Task.Run(() =>
+                {
+                    string line;
+                    Dispatcher.Invoke(() =>
                     {
-                        string line;
-                        Dispatcher.Invoke(() =>
+//                            txtbox_Proxydetails.Text = "";
+                        txtbox_Proxydetails.Items.Clear();
+                        System.IO.StreamReader file =
+                            new System.IO.StreamReader(filename);
+                        while ((line = file.ReadLine()) != null)
                         {
-                            txtbox_Proxydetails.Text = "";
-                            System.IO.StreamReader file =
-                                new System.IO.StreamReader(filename);
-                            while ((line = file.ReadLine()) != null)
+                            Proxy temp = new Proxy();
+                            var subline = line.Split(':');
+                            temp.IP = subline[0];
+                            temp.Port = subline[1];
+                            database.Add(temp);
+                        }
+                        file.Close();
+                        Console.WriteLine("The number of Proxies are " + database.Count);
+                    });
+                    Task.Run(() =>
+                    {
+                        for (int i = 0; i < database.Count; i++)
+                        {
+                            Dispatcher.Invoke(() =>
                             {
-                                Proxy temp = new Proxy();
-                                temp.IP = line;
-                                database.Add(temp);
-//                            txtbox_Proxydetails.Text += line + "\n";
-////                            Console.WriteLine(line);
-                            }
-                            file.Close();
-                            Console.WriteLine("The number of Proxies are " + database.Count);
-                            Task.Run(() =>
-                            {
-                                for (int i = 0; i < database.Count; i++)
-                                {
-                                    Dispatcher.Invoke(() => { txtbox_Proxydetails.Text += database[i].IP + "\n"; });
-                                }
+                                txtbox_Proxydetails.Items.Add(database[i].IP+ ":"+database[i].Port);
                             });
-                        });
-                    })
-                    ;
+                        }
+                    });
+                });
             }
         }
     }
