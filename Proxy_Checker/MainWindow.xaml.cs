@@ -35,6 +35,8 @@ namespace Proxy_Checker
     {
         private string filename;
         public List<Proxy> database = new List<Proxy>();
+        public Proxy globalTemp;
+        public ListBox checking = new ListBox();
 
         public MainWindow()
         {
@@ -138,37 +140,73 @@ namespace Proxy_Checker
         private void readFile(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = sender as BackgroundWorker;
-
-            for (int i = 1; (i <= 10); i++)
+            Dispatcher.Invoke(() =>
             {
-                if ((worker.CancellationPending == true))
-                {
-                    e.Cancel = true;
-                    break;
-                }
-                else
-                {
-                    string line;
-//                    txtbox_Proxydetails.Items.Clear();
-                    System.IO.StreamReader file =
-                        new System.IO.StreamReader(filename);
-                    while ((line = file.ReadLine()) != null)
-                    {
-                        Proxy temp = new Proxy();
-                        var subline = line.Split(':');
-                        temp.IP = subline[0];
-                        temp.Port = subline[1];
-                        database.Add(temp);
-                        Console.WriteLine(line);
-                    }
-                    file.Close();
-                    Console.WriteLine("The number of Proxies are " + database.Count);
+                statusProgress.IsIndeterminate = true;
+                lblStatus.Content = "Reading File";
+            });
 
-                    // Perform a time consuming operation and report progress.
-                    System.Threading.Thread.Sleep(500);
-//                    worker.ReportProgress((i * 10));
-                }
+
+            if ((worker.CancellationPending == true))
+            {
+                e.Cancel = true;
             }
+            else
+            {
+                string line;
+//                    txtbox_Proxydetails.Items.Clear();
+                System.IO.StreamReader file =
+                    new System.IO.StreamReader(filename);
+
+                while ((line = file.ReadLine()) != null)
+                {
+                    Proxy temp = new Proxy();
+                    var subline = line.Split(':');
+                    temp.IP = subline[0];
+                    temp.Port = subline[1];
+                    globalTemp = temp;
+                    Dispatcher.Invoke(() => { checking.Items.Add(temp); });
+
+                    //                    BackgroundWorker readAppend = new BackgroundWorker();
+                    //                    readAppend.DoWork +=
+                    //                        new DoWorkEventHandler(listAppend);
+                    //                    
+                    //                        readAppend.RunWorkerAsync();
+
+                    //                    Task.Run(
+                    //                        () =>
+                    //                        {
+                    //                            Dispatcher.BeginInvoke(
+                    //                                new Action(() =>
+                    //                                {
+                    //                                    txtbox_Proxydetails.Items.Add(temp.IP + ":" + temp.Port); 
+                    //                                }));
+                    //                        });
+
+                    database.Add(temp);
+                    Console.WriteLine(line);
+                }
+                file.Close();
+
+                Task.Run(
+                    () =>
+                    {
+                        Dispatcher.BeginInvoke(
+                            new Action(() =>
+                            {
+                                txtbox_Proxydetails.Items=checking.Items; 
+                                Console.Write("Added");
+                            }));
+                    });
+            }
+        }
+
+
+        private void listAppend(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker worker = sender as BackgroundWorker;
+
+            Dispatcher.Invoke(() => { txtbox_Proxydetails.Items.Add(globalTemp.IP + ":" + globalTemp.Port); });
         }
 
 
@@ -184,6 +222,18 @@ namespace Proxy_Checker
 
             else
             {
+                Dispatcher.Invoke(() =>
+                {
+                    statusProgress.IsIndeterminate = false;
+                    statusProgress.Visibility = System.Windows.Visibility.Hidden;
+                    lblStatus.Content = "File loaded";
+//                    for (int i = 0; i < database.Count; i++)
+//                        {
+//
+//                            Dispatcher.Invoke(
+//                                () => {  });
+//                        }
+                });
             }
         }
 
@@ -223,8 +273,8 @@ namespace Proxy_Checker
                     {
                         txtbox_Proxydetails.Items.Add($"{database[i].IP,15}{database[i].Port,15}");
                     }
+                    prgrsBar.IsIndeterminate = false;
                 });
-                prgrsBar.IsIndeterminate = false;
             });
         }
     }

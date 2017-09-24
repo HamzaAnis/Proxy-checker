@@ -45,11 +45,12 @@
             <ColumnDefinition Width="100*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="93*" />
-            <RowDefinition Height="137*"/>
-            <RowDefinition Height="105*" />
+            <RowDefinition Height="13*" />
+            <RowDefinition Height="174*"/>
+            <RowDefinition Height="274*"/>
+            <RowDefinition Height="210*" />
         </Grid.RowDefinitions>
-        <StackPanel Margin="8,8,-0.4,0.4" Grid.RowSpan="3" Grid.ColumnSpan="2">
+        <StackPanel Margin="8,8,-0.4,0.675" Grid.RowSpan="4" Grid.ColumnSpan="2">
             <StackPanel Orientation="Horizontal" Margin="0 3 0 0">
                 <Button x:Name="btnFileLoad" Style="{DynamicResource MaterialDesignRaisedButton}"
                         Margin="16 0 0 0"
@@ -67,7 +68,7 @@
             <GroupBox Header="Start/Stop" Style="{DynamicResource MaterialDesignGroupBox}" Margin="16,25,535.6,16"
                       materialDesign:ShadowAssist.ShadowDepth="Depth3" BorderThickness="0.5" Height="168" />
         </StackPanel>
-        <StackPanel Margin="0,0,-0.4,0.4" Grid.RowSpan="3" Grid.ColumnSpan="2">
+        <StackPanel Margin="0,0,-0.4,0.675" Grid.RowSpan="4" Grid.ColumnSpan="2">
             <materialDesign:Flipper Style="{StaticResource MaterialDesignCardFlipper}" Margin="580 610 0 0"
                                     IsFlippedChanged="Flipper_OnIsFlippedChanged">
                 <materialDesign:Flipper.FrontContent>
@@ -87,18 +88,35 @@
                 </materialDesign:Flipper.BackContent>
             </materialDesign:Flipper>
         </StackPanel>
-        <StackPanel Grid.Row="0" HorizontalAlignment="Stretch" Height="670" Margin="0,0,-0.4,0.4"
-                    VerticalAlignment="Bottom" Grid.RowSpan="3" Grid.ColumnSpan="2">
+        <StackPanel Grid.Row="0" HorizontalAlignment="Stretch" Height="670" Margin="0,0,-0.4,0.675"
+                    VerticalAlignment="Bottom" Grid.RowSpan="4" Grid.ColumnSpan="2">
 
             <ProgressBar x:Name="prgrsBar" IsIndeterminate="False" Margin="24,600,23.6,24" />
+            <Label x:Name="lblStatus" Content="Status" Margin="400,0,0,0"/>
+            <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}"                     
+                     Value="20"
+                     IsIndeterminate="False"
+                     x:Name="statusProgress"
+                     Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="-27 -22 0 0" />
+
         </StackPanel>
-        <Grid Grid.ColumnSpan="2" Margin="263,94,34.6,10" Grid.RowSpan="2">
+        <Grid Grid.ColumnSpan="2" Margin="263,81.467,34.6,10.275" Grid.RowSpan="2" Grid.Row="1">
             <ScrollViewer BorderThickness="5" Margin="0,0,0,0">
                 <!--                <TextBlock x:Name="txtbox_Proxydetails" Style="{StaticResource MaterialDesignSubheadingTextBlock}"-->
                 <!--                           Margin="0,0,0,0"-->
                 <!--                           ScrollViewer.HorizontalScrollBarVisibility="Auto"-->
                 <!--                           ScrollViewer.VerticalScrollBarVisibility="Auto"-->
                 <!--                           ScrollViewer.CanContentScroll="True" />-->
+
+<!--                <ListBox-->
+<!--                    Grid.ColumnSpan="2"-->
+<!--                    SelectionMode="Single"-->
+<!--                    VirtualizingPanel.IsContainerVirtualizable="True"-->
+<!--                    VirtualizingPanel.IsVirtualizing="True"-->
+<!--                    ScrollViewer.CanContentScroll="True"-->
+<!--                    ScrollViewer.HorizontalScrollBarVisibility="Auto"-->
+<!--                    ScrollViewer.VerticalScrollBarVisibility="Auto"-->
+<!--                    x:Name="txtbox_Proxydetails" />-->
 
                 <ListBox
                     Grid.ColumnSpan="2"
@@ -112,23 +130,23 @@
             </ScrollViewer>
         </Grid>
         <Button Style="{StaticResource MaterialDesignRaisedAccentButton}"
-                ToolTip="Change to text mode" Margin="315,18,205.6,131" Content="Text"
-                Height="Auto" Click="Button_Click_1" />
+                ToolTip="Change to text mode" Margin="315,5.467,205.6,131.111" Content="Text"
+                Height="Auto" Click="Button_Click_1" Grid.Row="1" />
         <Button Style="{StaticResource MaterialDesignRaisedAccentButton}"
-                ToolTip="Change to List mode" Margin="405,18,115.6,131" Content="List"
-                Height="Auto" Click="Button_Click_2" />
+                ToolTip="Change to List mode" Margin="405,5.467,115.6,131.111" Content="List"
+                Height="Auto" Click="Button_Click_2" Grid.Row="1" />
 
 
         <Button Style="{DynamicResource MaterialDesignRaisedDarkButton}"
-                Margin="35,87,343.6,156"
+                Margin="35,86.889,343.6,155.275"
                 materialDesign:ShadowAssist.ShadowDepth="Depth3" Content="Start"
-                Height="Auto" Grid.Row="1" />
+                Height="Auto" Grid.Row="2" />
         <Button Style="{DynamicResource MaterialDesignRaisedLightButton}"
-                Margin="35,141,343.6,102"
+                Margin="35,140.889,343.6,101.275"
                 materialDesign:ShadowAssist.ShadowDepth="Depth3" Content="Stop"
-                Height="Auto" Grid.Row="1" />
-        <Border BorderBrush="Gainsboro" BorderThickness="1" HorizontalAlignment="Left" Height="184" Margin="25,216,0,0"
-                Grid.RowSpan="2" VerticalAlignment="Top" Width="233" Grid.Row="1">
+                Height="Auto" Grid.Row="2" />
+        <Border BorderBrush="Gainsboro" BorderThickness="1" HorizontalAlignment="Left" Height="184" Margin="25,215.889,0,0"
+                Grid.RowSpan="2" VerticalAlignment="Top" Width="233" Grid.Row="2">
             <Label
                 Content="Statistics:&#xD;&#xA;&#xD;&#xA;     Checking:&#xD;&#xA;        Remain: &#xD;&#xA;           Good:&#xD;&#xA;              Bad:&#xD;&#xA;           Errors:" />
         </Border>
