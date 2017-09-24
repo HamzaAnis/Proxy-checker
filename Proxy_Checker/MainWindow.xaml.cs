@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Net.NetworkInformation;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -279,6 +280,30 @@ namespace Proxy_Checker
                             prgrsBar.IsIndeterminate = true;
                             statusProgress.IsIndeterminate = true;
                             lblStatus.Content = "Checking Proxies";
+                        });
+
+                        Task.Run(() =>
+                        {
+                            Ping ping = new Ping();
+
+                            for (int j = 0; j < database.Count; j++)
+                            {
+                                Console.WriteLine(j + ":   Checking " + database[j].IP + "   port " + database[j].Port +
+                                                  " \n");
+                                int i = 0;
+
+                                while (i != 4)
+                                {
+                                    PingReply reply = ping.Send(database[j].IP.ToString(), Int32.Parse(database[j].Port));
+                                    if (reply.Status == IPStatus.Success)
+                                    {
+                                        Console.WriteLine("\t\t Ip status " + database[j].IP + "   " + database[j].Port +
+                                                          "   " + reply.Status);
+                                        break;
+                                    }
+                                    i++;
+                                }
+                            }
                         });
                     }
                 }
