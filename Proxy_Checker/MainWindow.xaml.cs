@@ -36,6 +36,9 @@ namespace Proxy_Checker
         private string filename;
         public List<Proxy> database = new List<Proxy>();
         public Proxy globalTemp;
+        public int threads;
+
+        List<BackgroundWorker> proxyWorker = new List<BackgroundWorker>();
 
         public MainWindow()
         {
@@ -51,7 +54,6 @@ namespace Proxy_Checker
             Console.WriteLine("SAMPLE 1: Closing dialog with parameter: " + (dialogClosingEventArgs.Parameter ?? ""));
 
             if (!Equals(dialogClosingEventArgs.Parameter, true)) return;
-
         }
 
         private void Flipper_OnIsFlippedChanged(object sender, RoutedPropertyChangedEventArgs<bool> e)
@@ -120,7 +122,7 @@ namespace Proxy_Checker
             else
             {
                 string line;
-                string append="";
+                string append = "";
                 //                    txtbox_Proxydetails.Items.Clear();
                 System.IO.StreamReader file =
                     new System.IO.StreamReader(filename);
@@ -148,11 +150,12 @@ namespace Proxy_Checker
                                 txtbox_Proxydetails.Text = append;
 //                                txtbox_Proxydetails.Items=checking.Items; 
 //                                Console.Write("Added");
+                                listButton.Visibility = System.Windows.Visibility.Visible;
+                                textButton.Visibility = System.Windows.Visibility.Visible;
                             }));
                     });
             }
         }
-
 
 
         private void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -193,7 +196,7 @@ namespace Proxy_Checker
                     string append = "";
                     for (int i = 0; i < database.Count; i++)
                     {
-                        append += database[i].IP + ":" + database[i].Port+"\n";
+                        append += database[i].IP + ":" + database[i].Port + "\n";
                     }
                     txtbox_Proxydetails.Text = append;
                     prgrsBar.IsIndeterminate = false;
@@ -201,7 +204,6 @@ namespace Proxy_Checker
                     lblStatus.Content = "Text Converted";
                 });
             });
-
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
@@ -216,7 +218,7 @@ namespace Proxy_Checker
                     string append = "";
                     for (int i = 0; i < database.Count; i++)
                     {
-                        append += $"{database[i].IP,15}{database[i].Port,15}"+"\n";
+                        append += $"{database[i].IP,15}{database[i].Port,15}" + "\n";
                     }
                     txtbox_Proxydetails.Text = append;
                     prgrsBar.IsIndeterminate = false;
@@ -240,6 +242,37 @@ namespace Proxy_Checker
                     prgrsBar.IsIndeterminate = false;
                 });
             });
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            if (btnFileLoad.Content.Equals("Load List"))
+            {
+                MessageBox.Show("Please load a file", "Exception");
+            }
+            else
+            {
+                int parsedValue;
+                if (txtBoxThread.Text.Equals(""))
+                {
+                    MessageBox.Show("Please enter value of thread.", "Enter threads");
+                }
+                else if (!int.TryParse(txtBoxThread.Text, out parsedValue))
+                {
+                    MessageBox.Show("This is a number only field", "Only numbers");
+                }
+                else
+                {
+                    threads = Int32.Parse(txtBoxThread.Text);
+                    if (threads > 1 && threads < 100)
+                    {
+                    }
+                    else
+                    {
+                        MessageBox.Show("The thread range is between 1 and 100", "Thread Range");
+                    }
+                }
+            }
         }
     }
 }

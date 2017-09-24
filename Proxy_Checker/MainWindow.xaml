@@ -60,7 +60,7 @@
             </StackPanel>
             <GroupBox Header="Threads" Style="{DynamicResource MaterialDesignGroupBox}" Margin="16,28,535.6,16"
                       materialDesign:ShadowAssist.ShadowDepth="Depth3" BorderThickness="0.5" Height="108">
-                <TextBox Grid.Row="4" Grid.Column="1" materialDesign:HintAssist.Hint="Threads"
+                <TextBox x:Name="txtBoxThread" Grid.Row="4" Grid.Column="1" materialDesign:HintAssist.Hint="Threads"
                          ToolTip="Specify number of threads"
                          Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="0,0,0,22" Width="159"
                          TextChanged="TextBox_TextChanged" />
@@ -128,18 +128,18 @@
                     x:Name="txtbox_Proxydetails" />
             </ScrollViewer>
         </Grid>
-        <Button Style="{StaticResource MaterialDesignRaisedAccentButton}"
+        <Button x:Name="textButton" Style="{StaticResource MaterialDesignRaisedAccentButton}"
                 ToolTip="Change to text mode" Margin="315,5.467,205.6,131.111" Content="Text"
-                Height="Auto" Click="Button_Click_1" Grid.Row="1" />
-        <Button Style="{StaticResource MaterialDesignRaisedAccentButton}"
+                Height="Auto" Click="Button_Click_1" Grid.Row="1" Visibility="Hidden" />
+        <Button x:Name="listButton" Style="{StaticResource MaterialDesignRaisedAccentButton}"
                 ToolTip="Change to List mode" Margin="405,5.467,115.6,131.111" Content="List"
-                Height="Auto" Click="Button_Click_2" Grid.Row="1" />
+                Height="Auto" Click="Button_Click_2" Grid.Row="1" Visibility="Hidden" />
 
 
         <Button Style="{DynamicResource MaterialDesignRaisedDarkButton}"
                 Margin="35,86.889,343.6,155.275"
                 materialDesign:ShadowAssist.ShadowDepth="Depth3" Content="Start"
-                Height="Auto" Grid.Row="2" />
+                Height="Auto" Grid.Row="2" Click="Button_Click_3" />
         <Button Style="{DynamicResource MaterialDesignRaisedLightButton}"
                 Margin="35,140.889,343.6,101.275"
                 materialDesign:ShadowAssist.ShadowDepth="Depth3" Content="Stop"
