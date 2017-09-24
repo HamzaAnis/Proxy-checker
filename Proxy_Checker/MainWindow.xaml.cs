@@ -90,34 +90,107 @@ namespace Proxy_Checker
                 Task.Run(() =>
                 {
                     string line;
-                    Dispatcher.Invoke(() =>
+                    BackgroundWorker bw = new BackgroundWorker();
+                    bw.WorkerSupportsCancellation = true;
+                    bw.WorkerReportsProgress = true;
+
+                    bw.DoWork +=
+                        new DoWorkEventHandler(readFile);
+                    bw.ProgressChanged +=
+                        new ProgressChangedEventHandler(bw_ProgressChanged);
+                    bw.RunWorkerCompleted +=
+                        new RunWorkerCompletedEventHandler(bw_RunWorkerCompleted);
+                    if (bw.IsBusy != true)
                     {
-//                            txtbox_Proxydetails.Text = "";
-                        txtbox_Proxydetails.Items.Clear();
-                        System.IO.StreamReader file =
-                            new System.IO.StreamReader(filename);
-                        while ((line = file.ReadLine()) != null)
-                        {
-                            Proxy temp = new Proxy();
-                            var subline = line.Split(':');
-                            temp.IP = subline[0];
-                            temp.Port = subline[1];
-                            database.Add(temp);
-                        }
-                        file.Close();
-                        Console.WriteLine("The number of Proxies are " + database.Count);
-                    });
+                        bw.RunWorkerAsync();
+                    }
+
+                    //                    Dispatcher.Invoke(() =>
+                    //                    {
+                    //                        txtbox_Proxydetails.Items.Clear();
+                    //                        System.IO.StreamReader file =
+                    //                            new System.IO.StreamReader(filename);
+                    //                        while ((line = file.ReadLine()) != null)
+                    //                        {
+                    //                            Proxy temp = new Proxy();
+                    //                            var subline = line.Split(':');
+                    //                            temp.IP = subline[0];
+                    //                            temp.Port = subline[1];
+                    //                            database.Add(temp);
+                    //                            Console.WriteLine(line);
+                    //                        }
+                    //                        file.Close();
+                    //                        Console.WriteLine("The number of Proxies are " + database.Count);
+                    //                    });
                     Task.Run(() =>
                     {
-                        for (int i = 0; i < database.Count; i++)
-                        {
-
-                            Dispatcher.Invoke(
-                                () => { txtbox_Proxydetails.Items.Add(database[i].IP + ":" + database[i].Port); });
-                        }
+//                        for (int i = 0; i < database.Count; i++)
+//                        {
+//
+//                            Dispatcher.Invoke(
+//                                () => { txtbox_Proxydetails.Items.Add(database[i].IP + ":" + database[i].Port); });
+//                        }
                     });
                 });
             }
+        }
+
+        private void readFile(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker worker = sender as BackgroundWorker;
+
+            for (int i = 1; (i <= 10); i++)
+            {
+                if ((worker.CancellationPending == true))
+                {
+                    e.Cancel = true;
+                    break;
+                }
+                else
+                {
+                    string line;
+//                    txtbox_Proxydetails.Items.Clear();
+                    System.IO.StreamReader file =
+                        new System.IO.StreamReader(filename);
+                    while ((line = file.ReadLine()) != null)
+                    {
+                        Proxy temp = new Proxy();
+                        var subline = line.Split(':');
+                        temp.IP = subline[0];
+                        temp.Port = subline[1];
+                        database.Add(temp);
+                        Console.WriteLine(line);
+                    }
+                    file.Close();
+                    Console.WriteLine("The number of Proxies are " + database.Count);
+
+                    // Perform a time consuming operation and report progress.
+                    System.Threading.Thread.Sleep(500);
+//                    worker.ReportProgress((i * 10));
+                }
+            }
+        }
+
+
+        private void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if ((e.Cancelled == true))
+            {
+            }
+
+            else if (!(e.Error == null))
+            {
+            }
+
+            else
+            {
+            }
+        }
+
+
+        private void bw_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+//            this.tbProgress.Text = (e.ProgressPercentage.ToString() + "%");
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -133,7 +206,6 @@ namespace Proxy_Checker
                         txtbox_Proxydetails.Items.Add(database[i].IP + ":" + database[i].Port);
                     }
                     prgrsBar.IsIndeterminate = false;
-
                 });
             });
         }
