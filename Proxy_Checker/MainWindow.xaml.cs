@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -110,6 +111,7 @@ namespace Proxy_Checker
                     {
                         for (int i = 0; i < database.Count; i++)
                         {
+
                             Dispatcher.Invoke(
                                 () => { txtbox_Proxydetails.Items.Add(database[i].IP + ":" + database[i].Port); });
                         }
@@ -120,6 +122,7 @@ namespace Proxy_Checker
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
+            prgrsBar.IsIndeterminate = true;
             Task.Run(() =>
             {
                 Dispatcher.Invoke(() =>
@@ -127,14 +130,17 @@ namespace Proxy_Checker
                     txtbox_Proxydetails.Items.Clear();
                     for (int i = 0; i < database.Count; i++)
                     {
-                        txtbox_Proxydetails.Items.Add(database[i].IP+":"+database[i].Port);
+                        txtbox_Proxydetails.Items.Add(database[i].IP + ":" + database[i].Port);
                     }
+                    prgrsBar.IsIndeterminate = false;
+
                 });
             });
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
+            prgrsBar.IsIndeterminate = true;
             Task.Run(() =>
             {
                 Dispatcher.Invoke(() =>
@@ -146,6 +152,7 @@ namespace Proxy_Checker
                         txtbox_Proxydetails.Items.Add($"{database[i].IP,15}{database[i].Port,15}");
                     }
                 });
+                prgrsBar.IsIndeterminate = false;
             });
         }
     }

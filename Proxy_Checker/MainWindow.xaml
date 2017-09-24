@@ -52,12 +52,14 @@
             <StackPanel Orientation="Horizontal" Margin="0 3 0 0">
                 <Button x:Name="btnFileLoad" Style="{DynamicResource MaterialDesignRaisedButton}"
                         Margin="16 0 0 0"
+                        ToolTip="Load proxy list"
                         materialDesign:ShadowAssist.ShadowDepth="Depth5" Width="228" Content="Load List"
                         Click="btnFileLoad_Click" />
             </StackPanel>
             <GroupBox Header="Threads" Style="{DynamicResource MaterialDesignGroupBox}" Margin="16,28,535.6,16"
                       materialDesign:ShadowAssist.ShadowDepth="Depth3" BorderThickness="0.5" Height="108">
                 <TextBox Grid.Row="4" Grid.Column="1" materialDesign:HintAssist.Hint="Threads"
+                         ToolTip="Specify number of threads"
                          Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="0,0,0,22" Width="159"
                          TextChanged="TextBox_TextChanged" />
             </GroupBox>
@@ -97,18 +99,22 @@
                 <!--                           ScrollViewer.VerticalScrollBarVisibility="Auto"-->
                 <!--                           ScrollViewer.CanContentScroll="True" />-->
 
-                <ListBox ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                         ScrollViewer.VerticalScrollBarVisibility="Auto"
-                         ScrollViewer.CanContentScroll="True"
-                         x:Name="txtbox_Proxydetails">
-                    </ListBox>
+                <ListBox
+                    Grid.ColumnSpan="2"
+                    SelectionMode="Single"
+                    VirtualizingPanel.IsContainerVirtualizable="True"
+                    VirtualizingPanel.IsVirtualizing="True"
+                    ScrollViewer.CanContentScroll="True"
+                    ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                    x:Name="txtbox_Proxydetails" />
             </ScrollViewer>
         </Grid>
         <Button Style="{StaticResource MaterialDesignRaisedAccentButton}"
-                ToolTip="Resource name: MaterialDesignRaisedAccentButton" Margin="315,18,206,405" Content="Text"
+                ToolTip="Change to text mode" Margin="315,18,206,405" Content="Text"
                 Height="Auto" Click="Button_Click_1" />
         <Button Style="{StaticResource MaterialDesignRaisedAccentButton}"
-                ToolTip="Resource name: MaterialDesignRaisedAccentButton" Margin="405,18,116,405" Content="List"
+                ToolTip="Change to List mode" Margin="405,18,116,405" Content="List"
                 Height="Auto" Click="Button_Click_2" />
 
 
