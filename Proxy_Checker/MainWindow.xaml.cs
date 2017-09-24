@@ -36,7 +36,6 @@ namespace Proxy_Checker
         private string filename;
         public List<Proxy> database = new List<Proxy>();
         public Proxy globalTemp;
-        public ListBox checking = new ListBox();
 
         public MainWindow()
         {
@@ -51,14 +50,8 @@ namespace Proxy_Checker
         {
             Console.WriteLine("SAMPLE 1: Closing dialog with parameter: " + (dialogClosingEventArgs.Parameter ?? ""));
 
-            //you can cancel the dialog close:
-            //eventArgs.Cancel();
-
             if (!Equals(dialogClosingEventArgs.Parameter, true)) return;
 
-//            if (!string.IsNullOrWhiteSpace(FruitTextBox.Text))
-//                FruitListBox.Items.Add(string.Format("{0}  |   {1}", FruitTextBox.Text, "Hamza Ains"));
-//            FruitListBox.Items.Add("Column3Text").SubItems.AddRange(new string[] { "col1;row3", "col2;row3", "col3;row3" });
         }
 
         private void Flipper_OnIsFlippedChanged(object sender, RoutedPropertyChangedEventArgs<bool> e)
@@ -106,33 +99,6 @@ namespace Proxy_Checker
                     {
                         bw.RunWorkerAsync();
                     }
-
-                    //                    Dispatcher.Invoke(() =>
-                    //                    {
-                    //                        txtbox_Proxydetails.Items.Clear();
-                    //                        System.IO.StreamReader file =
-                    //                            new System.IO.StreamReader(filename);
-                    //                        while ((line = file.ReadLine()) != null)
-                    //                        {
-                    //                            Proxy temp = new Proxy();
-                    //                            var subline = line.Split(':');
-                    //                            temp.IP = subline[0];
-                    //                            temp.Port = subline[1];
-                    //                            database.Add(temp);
-                    //                            Console.WriteLine(line);
-                    //                        }
-                    //                        file.Close();
-                    //                        Console.WriteLine("The number of Proxies are " + database.Count);
-                    //                    });
-                    Task.Run(() =>
-                    {
-//                        for (int i = 0; i < database.Count; i++)
-//                        {
-//
-//                            Dispatcher.Invoke(
-//                                () => { txtbox_Proxydetails.Items.Add(database[i].IP + ":" + database[i].Port); });
-//                        }
-                    });
                 });
             }
         }
@@ -154,7 +120,8 @@ namespace Proxy_Checker
             else
             {
                 string line;
-//                    txtbox_Proxydetails.Items.Clear();
+                string append="";
+                //                    txtbox_Proxydetails.Items.Clear();
                 System.IO.StreamReader file =
                     new System.IO.StreamReader(filename);
 
@@ -164,27 +131,11 @@ namespace Proxy_Checker
                     var subline = line.Split(':');
                     temp.IP = subline[0];
                     temp.Port = subline[1];
+                    append += line + "\n";
                     globalTemp = temp;
-                    Dispatcher.Invoke(() => { checking.Items.Add(temp); });
-
-                    //                    BackgroundWorker readAppend = new BackgroundWorker();
-                    //                    readAppend.DoWork +=
-                    //                        new DoWorkEventHandler(listAppend);
-                    //                    
-                    //                        readAppend.RunWorkerAsync();
-
-                    //                    Task.Run(
-                    //                        () =>
-                    //                        {
-                    //                            Dispatcher.BeginInvoke(
-                    //                                new Action(() =>
-                    //                                {
-                    //                                    txtbox_Proxydetails.Items.Add(temp.IP + ":" + temp.Port); 
-                    //                                }));
-                    //                        });
 
                     database.Add(temp);
-                    Console.WriteLine(line);
+//                    Console.WriteLine(line);
                 }
                 file.Close();
 
@@ -194,20 +145,14 @@ namespace Proxy_Checker
                         Dispatcher.BeginInvoke(
                             new Action(() =>
                             {
-                                txtbox_Proxydetails.Items=checking.Items; 
-                                Console.Write("Added");
+                                txtbox_Proxydetails.Text = append;
+//                                txtbox_Proxydetails.Items=checking.Items; 
+//                                Console.Write("Added");
                             }));
                     });
             }
         }
 
-
-        private void listAppend(object sender, DoWorkEventArgs e)
-        {
-            BackgroundWorker worker = sender as BackgroundWorker;
-
-            Dispatcher.Invoke(() => { txtbox_Proxydetails.Items.Add(globalTemp.IP + ":" + globalTemp.Port); });
-        }
 
 
         private void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -227,12 +172,6 @@ namespace Proxy_Checker
                     statusProgress.IsIndeterminate = false;
                     statusProgress.Visibility = System.Windows.Visibility.Hidden;
                     lblStatus.Content = "File loaded";
-//                    for (int i = 0; i < database.Count; i++)
-//                        {
-//
-//                            Dispatcher.Invoke(
-//                                () => {  });
-//                        }
                 });
             }
         }
@@ -240,38 +179,63 @@ namespace Proxy_Checker
 
         private void bw_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-//            this.tbProgress.Text = (e.ProgressPercentage.ToString() + "%");
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
+            statusProgress.IsIndeterminate = true;
+            lblStatus.Content = " Converting to list";
             prgrsBar.IsIndeterminate = true;
             Task.Run(() =>
             {
                 Dispatcher.Invoke(() =>
                 {
-                    txtbox_Proxydetails.Items.Clear();
+                    string append = "";
                     for (int i = 0; i < database.Count; i++)
                     {
-                        txtbox_Proxydetails.Items.Add(database[i].IP + ":" + database[i].Port);
+                        append += database[i].IP + ":" + database[i].Port+"\n";
                     }
+                    txtbox_Proxydetails.Text = append;
                     prgrsBar.IsIndeterminate = false;
+                    statusProgress.IsIndeterminate = false;
+                    lblStatus.Content = "Text Converted";
                 });
             });
+
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
+            statusProgress.IsIndeterminate = true;
+            lblStatus.Content = " Converting to Text";
             prgrsBar.IsIndeterminate = true;
             Task.Run(() =>
             {
                 Dispatcher.Invoke(() =>
                 {
-                    txtbox_Proxydetails.Items.Clear();
-                    txtbox_Proxydetails.Items.Add($"{"IP",10}{"PORT",10}");
+                    string append = "";
                     for (int i = 0; i < database.Count; i++)
                     {
-                        txtbox_Proxydetails.Items.Add($"{database[i].IP,15}{database[i].Port,15}");
+                        append += $"{database[i].IP,15}{database[i].Port,15}"+"\n";
+                    }
+                    txtbox_Proxydetails.Text = append;
+                    prgrsBar.IsIndeterminate = false;
+                    statusProgress.IsIndeterminate = false;
+                    lblStatus.Content = "List Converted";
+                });
+            });
+
+
+            prgrsBar.IsIndeterminate = true;
+            Task.Run(() =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+//                    txtbox_Proxydetails.Items.Clear();
+//                    txtbox_Proxydetails.Items.Add($"{"IP",10}{"PORT",10}");
+                    for (int i = 0; i < database.Count; i++)
+                    {
+//                        txtbox_Proxydetails.Items.Add($"{database[i].IP,15}{database[i].Port,15}");
                     }
                     prgrsBar.IsIndeterminate = false;
                 });

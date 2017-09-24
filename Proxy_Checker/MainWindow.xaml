@@ -118,9 +118,8 @@
 <!--                    ScrollViewer.VerticalScrollBarVisibility="Auto"-->
 <!--                    x:Name="txtbox_Proxydetails" />-->
 
-                <ListBox
+                <TextBlock
                     Grid.ColumnSpan="2"
-                    SelectionMode="Single"
                     VirtualizingPanel.IsContainerVirtualizable="True"
                     VirtualizingPanel.IsVirtualizing="True"
                     ScrollViewer.CanContentScroll="True"
