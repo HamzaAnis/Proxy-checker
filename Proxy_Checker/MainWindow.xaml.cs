@@ -82,6 +82,8 @@ namespace Proxy_Checker
 
             if (result == true)
             {
+                statusProgress.Visibility = System.Windows.Visibility.Visible;
+                lblStatus.Visibility = System.Windows.Visibility.Visible;
                 filename = dlg.FileName;
                 btnFileLoad.Content = dlg.SafeFileName;
                 Task.Run(() =>
@@ -215,7 +217,7 @@ namespace Proxy_Checker
             {
                 Dispatcher.Invoke(() =>
                 {
-                    string append = "";
+                    string append = $"{"IP",15}{"Port",15}" + "\n";
                     for (int i = 0; i < database.Count; i++)
                     {
                         append += $"{database[i].IP,15}{database[i].Port,15}" + "\n";
@@ -264,15 +266,27 @@ namespace Proxy_Checker
                 else
                 {
                     threads = Int32.Parse(txtBoxThread.Text);
-                    if (threads > 1 && threads < 100)
-                    {
-                    }
-                    else
+                    if (!(threads > 1 && threads < 100))
                     {
                         MessageBox.Show("The thread range is between 1 and 100", "Thread Range");
                     }
+                    else
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            statusProgress.Visibility = System.Windows.Visibility.Visible;
+                            lblStatus.Visibility = System.Windows.Visibility.Visible;
+                            prgrsBar.IsIndeterminate = true;
+                            statusProgress.IsIndeterminate = true;
+                            lblStatus.Content = "Checking Proxies";
+                        });
+                    }
                 }
             }
+        }
+
+        public void CheckProxyStatus()
+        {
         }
     }
 }

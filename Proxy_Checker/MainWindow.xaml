@@ -92,12 +92,12 @@
                     VerticalAlignment="Bottom" Grid.RowSpan="4" Grid.ColumnSpan="2">
 
             <ProgressBar x:Name="prgrsBar" IsIndeterminate="False" Margin="24,600,23.6,24" />
-            <Label x:Name="lblStatus" Content="Status" Margin="400,0,0,0"/>
+            <Label x:Name="lblStatus" Content="Status" Margin="400,0,0,0" Visibility="Hidden"/>
             <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}"                     
                      Value="20"
                      IsIndeterminate="False"
                      x:Name="statusProgress"
-                     Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="-27 -22 0 0" />
+                     Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="-27 -22 0 0" Visibility="Hidden" />
 
         </StackPanel>
         <Grid Grid.ColumnSpan="2" Margin="263,81.467,34.6,10.275" Grid.RowSpan="2" Grid.Row="1">
