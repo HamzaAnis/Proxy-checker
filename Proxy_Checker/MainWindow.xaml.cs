@@ -314,7 +314,7 @@ namespace Proxy_Checker
 
                                 try
                                 {
-                                    tcpClient.Connect(database[j].IP,);
+                                    tcpClient.Connect(database[j].IP, 80);
                                     Console.WriteLine(database[j].IP+ "  :  Port open");
                                 }
                                 catch (Exception)
