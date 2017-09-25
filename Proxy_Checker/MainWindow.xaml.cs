@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Threading;
@@ -20,9 +20,9 @@ namespace Proxy_Checker
     public class Proxy
     {
         public string IP;
-        public string Port;
         public bool IsOpen;
         public bool IsSmptOpen;
+        public string Port;
 
         public Proxy()
         {
@@ -35,12 +35,12 @@ namespace Proxy_Checker
 
     public partial class MainWindow : Window
     {
-        private string filename;
         public List<Proxy> database = new List<Proxy>();
+        private string filename;
         public Proxy globalTemp;
-        public int threads;
 
-        List<BackgroundWorker> proxyWorker = new List<BackgroundWorker>();
+        private List<BackgroundWorker> proxyWorker = new List<BackgroundWorker>();
+        public int threads;
 
         public MainWindow()
         {
@@ -85,34 +85,32 @@ namespace Proxy_Checker
 
             if (result == true)
             {
-                statusProgress.Visibility = System.Windows.Visibility.Visible;
-                lblStatus.Visibility = System.Windows.Visibility.Visible;
+                statusProgress.Visibility = Visibility.Visible;
+                lblStatus.Visibility = Visibility.Visible;
                 filename = dlg.FileName;
                 btnFileLoad.Content = dlg.SafeFileName;
                 Task.Run(() =>
                 {
                     string line;
-                    BackgroundWorker bw = new BackgroundWorker();
+                    var bw = new BackgroundWorker();
                     bw.WorkerSupportsCancellation = true;
                     bw.WorkerReportsProgress = true;
 
                     bw.DoWork +=
-                        new DoWorkEventHandler(readFile);
+                        readFile;
                     bw.ProgressChanged +=
-                        new ProgressChangedEventHandler(bw_ProgressChanged);
+                        bw_ProgressChanged;
                     bw.RunWorkerCompleted +=
-                        new RunWorkerCompletedEventHandler(bw_RunWorkerCompleted);
+                        bw_RunWorkerCompleted;
                     if (bw.IsBusy != true)
-                    {
                         bw.RunWorkerAsync();
-                    }
                 });
             }
         }
 
         private void readFile(object sender, DoWorkEventArgs e)
         {
-            BackgroundWorker worker = sender as BackgroundWorker;
+            var worker = sender as BackgroundWorker;
             Dispatcher.Invoke(() =>
             {
                 statusProgress.IsIndeterminate = true;
@@ -120,21 +118,21 @@ namespace Proxy_Checker
             });
 
 
-            if ((worker.CancellationPending == true))
+            if (worker.CancellationPending)
             {
                 e.Cancel = true;
             }
             else
             {
                 string line;
-                string append = "";
+                var append = "";
                 //                    txtbox_Proxydetails.Items.Clear();
-                System.IO.StreamReader file =
-                    new System.IO.StreamReader(filename);
+                var file =
+                    new StreamReader(filename);
 
                 while ((line = file.ReadLine()) != null)
                 {
-                    Proxy temp = new Proxy();
+                    var temp = new Proxy();
                     var subline = line.Split(':');
                     temp.IP = subline[0];
                     temp.Port = subline[1];
@@ -155,8 +153,8 @@ namespace Proxy_Checker
                                 txtbox_Proxydetails.Text = append;
 //                                txtbox_Proxydetails.Items=checking.Items; 
 //                                Console.Write("Added");
-                                listButton.Visibility = System.Windows.Visibility.Visible;
-                                textButton.Visibility = System.Windows.Visibility.Visible;
+                                listButton.Visibility = Visibility.Visible;
+                                textButton.Visibility = Visibility.Visible;
                             }));
                     });
             }
@@ -165,7 +163,7 @@ namespace Proxy_Checker
 
         private void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if ((e.Cancelled == true))
+            if (e.Cancelled)
             {
             }
 
@@ -178,7 +176,7 @@ namespace Proxy_Checker
                 Dispatcher.Invoke(() =>
                 {
                     statusProgress.IsIndeterminate = false;
-                    statusProgress.Visibility = System.Windows.Visibility.Hidden;
+                    statusProgress.Visibility = Visibility.Hidden;
                     lblStatus.Content = "File loaded";
                 });
             }
@@ -198,11 +196,9 @@ namespace Proxy_Checker
             {
                 Dispatcher.Invoke(() =>
                 {
-                    string append = "";
-                    for (int i = 0; i < database.Count; i++)
-                    {
+                    var append = "";
+                    for (var i = 0; i < database.Count; i++)
                         append += database[i].IP + ":" + database[i].Port + "\n";
-                    }
                     txtbox_Proxydetails.Text = append;
                     prgrsBar.IsIndeterminate = false;
                     statusProgress.IsIndeterminate = false;
@@ -220,11 +216,9 @@ namespace Proxy_Checker
             {
                 Dispatcher.Invoke(() =>
                 {
-                    string append = $"{"IP",15}{"Port",15}" + "\n";
-                    for (int i = 0; i < database.Count; i++)
-                    {
+                    var append = $"{"IP",15}{"Port",15}" + "\n";
+                    for (var i = 0; i < database.Count; i++)
                         append += $"{database[i].IP,15}{database[i].Port,15}" + "\n";
-                    }
                     txtbox_Proxydetails.Text = append;
                     prgrsBar.IsIndeterminate = false;
                     statusProgress.IsIndeterminate = false;
@@ -240,7 +234,7 @@ namespace Proxy_Checker
                 {
 //                    txtbox_Proxydetails.Items.Clear();
 //                    txtbox_Proxydetails.Items.Add($"{"IP",10}{"PORT",10}");
-                    for (int i = 0; i < database.Count; i++)
+                    for (var i = 0; i < database.Count; i++)
                     {
 //                        txtbox_Proxydetails.Items.Add($"{database[i].IP,15}{database[i].Port,15}");
                     }
@@ -251,7 +245,7 @@ namespace Proxy_Checker
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            int open = 0;
+            var open = 0;
             if (btnFileLoad.Content.Equals("Load List"))
             {
                 MessageBox.Show("Please load a file", "Exception");
@@ -269,7 +263,7 @@ namespace Proxy_Checker
                 }
                 else
                 {
-                    threads = Int32.Parse(txtBoxThread.Text);
+                    threads = int.Parse(txtBoxThread.Text);
                     if (!(threads > 1 && threads < 100))
                     {
                         MessageBox.Show("The thread range is between 1 and 100", "Thread Range");
@@ -278,8 +272,8 @@ namespace Proxy_Checker
                     {
                         Dispatcher.Invoke(() =>
                         {
-                            statusProgress.Visibility = System.Windows.Visibility.Visible;
-                            lblStatus.Visibility = System.Windows.Visibility.Visible;
+                            statusProgress.Visibility = Visibility.Visible;
+                            lblStatus.Visibility = Visibility.Visible;
                             prgrsBar.IsIndeterminate = true;
                             statusProgress.IsIndeterminate = true;
                             lblStatus.Content = "Checking Proxies";
@@ -287,64 +281,14 @@ namespace Proxy_Checker
 
                         Task.Run(() =>
                         {
-                            Ping ping = new Ping();
-
-
-                            for (int j = 0; j < database.Count; j++)
+                            var ping = new Ping();
+                            for (var j = 0; j < database.Count; j++)
                             {
-                                //                                Console.WriteLine(j + ":   Checking " + database[j].IP + "   port " + database[j].Port +
-                                //                                                  " \n");
-                                //                                int i = 0;
-                                //
-                                //                                while (i != 4)
-                                //                                {
-                                //                                    Console.WriteLine("Checking Ping");
-                                //                                     tcpClient.Connect(database[j].IP.ToString(), Int32.Parse(database[j].Port));
-                                //
-                                //                                    PingReply reply = ping.Send(database[j].IP.ToString());
-                                //                                    Console.WriteLine("Passed from here " + reply.Status);
-                                //                                    if (reply.Status == IPStatus.Success)
-                                //                                    {
-                                //                                        Console.WriteLine("\t\t Ip status " + database[j].IP + "   " + database[j].Port +
-                                //                                                          "   " + reply.Status);
-                                //                                        break;
-                                //                                    }
-                                //                                    i++;
-                                //                                }
-                                //                                TcpClient tcpClient = new TcpClient();
-                                //
-                                //                                try
-                                //                                {
-                                //                                    tcpClient.Connect(database[j].IP, Int32.Parse(database[j].Port));
-                                //                                    Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
-                                //                                                      "  :  Port open");
-                                //                                    open++;
-                                //                                }
-                                //                                catch (Exception)
-                                //                                {
-                                //                                    Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
-                                //                                                      "   :Port closed");
-                                //                                    tcpClient.Close();
-                                //                                }
-
-                                //                                var client = new TcpClient();
-                                //                                var result = client.BeginConnect(database[j].IP, 8080, null, null);
-                                //
-                                //                                var success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(1));
-                                //
-                                //                                if (!success)
-                                //                                {
-                                //                                    Console.WriteLine("Failed to connect to :: " + database[j].IP + "  on port 80");
-                                //                                }
-                                //                                else
-                                //                                {
-                                //                                    Console.WriteLine("Sucessfully connect to :: " + database[j].IP + "  on port 80");
-                                //                                }
-                                int pingCount = 0;
+                                var pingCount = 0;
                                 while (pingCount != 2)
                                 {
                                     var client = new TcpClient();
-                                    if (!client.ConnectAsync(database[j].IP, Int32.Parse(database[j].Port)).Wait(1000))
+                                    if (!client.ConnectAsync(database[j].IP, int.Parse(database[j].Port)).Wait(1000))
                                     {
                                         Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
                                                           "   :Port closed");
@@ -356,7 +300,9 @@ namespace Proxy_Checker
                                         Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
                                                           "  :  Port open");
                                         open++;
-                                        break;;
+                                        database[j].IsOpen = true;
+                                        break;
+                                        ;
                                     }
                                     pingCount++;
                                 }
