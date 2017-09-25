@@ -314,14 +314,30 @@ namespace Proxy_Checker
 
                                 try
                                 {
-                                    tcpClient.Connect(database[j].IP, 80);
-                                    Console.WriteLine(database[j].IP+ "  :  Port open");
+                                    tcpClient.Connect(database[j].IP, Int32.Parse(database[j].Port));
+                                    Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
+                                                      "  :  Port open");
                                 }
                                 catch (Exception)
                                 {
-                                    Console.WriteLine(database[j].IP+  "   :Port closed");
+                                    Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
+                                                      "   :Port closed");
+                                    tcpClient.Close();
                                 }
-                                tcpClient.Close();
+                                //                                var client = new TcpClient();
+                                //                                var result = client.BeginConnect("https://www.google.com.pk/", 8080, null, null);
+                                //
+                                //                                var success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(1));
+                                //
+                                //                                if (!success)
+                                //                                {
+                                //                                    Console.WriteLine("Failed to connect to :: " + database[j].IP + "  on port 80");
+                                //                                }
+                                //                                else
+                                //                                {
+                                //
+                                //                                    Console.WriteLine("Sucessfully connect to :: " + database[j].IP + "  on port 80");
+                                //                                }
                             }
                         });
                     }
