@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -49,6 +50,7 @@ namespace Proxy_Checker
         private void Button_Click(object sender, RoutedEventArgs e)
         {
         }
+
 
         private void Sample1_DialogHost_OnDialogClosing(object sender, DialogClosingEventArgs dialogClosingEventArgs)
         {
@@ -286,23 +288,40 @@ namespace Proxy_Checker
                         {
                             Ping ping = new Ping();
 
+
                             for (int j = 0; j < database.Count; j++)
                             {
-                                Console.WriteLine(j + ":   Checking " + database[j].IP + "   port " + database[j].Port +
-                                                  " \n");
-                                int i = 0;
+                                //                                Console.WriteLine(j + ":   Checking " + database[j].IP + "   port " + database[j].Port +
+                                //                                                  " \n");
+                                //                                int i = 0;
+                                //
+                                //                                while (i != 4)
+                                //                                {
+                                //                                    Console.WriteLine("Checking Ping");
+                                //                                     tcpClient.Connect(database[j].IP.ToString(), Int32.Parse(database[j].Port));
+                                //
+                                //                                    PingReply reply = ping.Send(database[j].IP.ToString());
+                                //                                    Console.WriteLine("Passed from here " + reply.Status);
+                                //                                    if (reply.Status == IPStatus.Success)
+                                //                                    {
+                                //                                        Console.WriteLine("\t\t Ip status " + database[j].IP + "   " + database[j].Port +
+                                //                                                          "   " + reply.Status);
+                                //                                        break;
+                                //                                    }
+                                //                                    i++;
+                                //                                }
+                                TcpClient tcpClient = new TcpClient();
 
-                                while (i != 4)
+                                try
                                 {
-                                    PingReply reply = ping.Send(database[j].IP.ToString(), Int32.Parse(database[j].Port));
-                                    if (reply.Status == IPStatus.Success)
-                                    {
-                                        Console.WriteLine("\t\t Ip status " + database[j].IP + "   " + database[j].Port +
-                                                          "   " + reply.Status);
-                                        break;
-                                    }
-                                    i++;
+                                    tcpClient.Connect(database[j].IP,);
+                                    Console.WriteLine(database[j].IP+ "  :  Port open");
                                 }
+                                catch (Exception)
+                                {
+                                    Console.WriteLine(database[j].IP+  "   :Port closed");
+                                }
+                                tcpClient.Close();
                             }
                         });
                     }
