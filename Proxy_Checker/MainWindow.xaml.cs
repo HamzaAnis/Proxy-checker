@@ -278,7 +278,10 @@ namespace Proxy_Checker
                             statusProgress.IsIndeterminate = true;
                             lblStatus.Content = "Checking Proxies";
                         });
+                        var chunkSize = Math.Round( ((double)database.Count / (double)threads));
 
+                        MessageBox.Show("The chunk  size is " + chunkSize + "Threads rae  " + threads + " length is " +
+                                        database.Count);
                         Task.Run(() =>
                         {
                             var ping = new Ping();
