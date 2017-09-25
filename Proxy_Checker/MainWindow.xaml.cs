@@ -311,21 +311,21 @@ namespace Proxy_Checker
                                 //                                    }
                                 //                                    i++;
                                 //                                }
-                                TcpClient tcpClient = new TcpClient();
-
-                                try
-                                {
-                                    tcpClient.Connect(database[j].IP, Int32.Parse(database[j].Port));
-                                    Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
-                                                      "  :  Port open");
-                                    open++;
-                                }
-                                catch (Exception)
-                                {
-                                    Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
-                                                      "   :Port closed");
-                                    tcpClient.Close();
-                                }
+                                //                                TcpClient tcpClient = new TcpClient();
+                                //
+                                //                                try
+                                //                                {
+                                //                                    tcpClient.Connect(database[j].IP, Int32.Parse(database[j].Port));
+                                //                                    Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
+                                //                                                      "  :  Port open");
+                                //                                    open++;
+                                //                                }
+                                //                                catch (Exception)
+                                //                                {
+                                //                                    Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
+                                //                                                      "   :Port closed");
+                                //                                    tcpClient.Close();
+                                //                                }
 
                                 //                                var client = new TcpClient();
                                 //                                var result = client.BeginConnect(database[j].IP, 8080, null, null);
@@ -340,19 +340,25 @@ namespace Proxy_Checker
                                 //                                {
                                 //                                    Console.WriteLine("Sucessfully connect to :: " + database[j].IP + "  on port 80");
                                 //                                }
-                                var client = new TcpClient();
-                                if (!client.ConnectAsync(database[j].IP, Int32.Parse(database[j].Port)).Wait(1000))
+                                int pingCount = 0;
+                                while (pingCount != 2)
                                 {
-                                    Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
-                                                      "   :Port closed");
+                                    var client = new TcpClient();
+                                    if (!client.ConnectAsync(database[j].IP, Int32.Parse(database[j].Port)).Wait(1000))
+                                    {
+                                        Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
+                                                          "   :Port closed");
 
-                                    // connection failure
-                                }
-                                else
-                                {
-                                    Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
-                                                      "  :  Port open");
-                                    open++;
+                                        // connection failure
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
+                                                          "  :  Port open");
+                                        open++;
+                                        break;;
+                                    }
+                                    pingCount++;
                                 }
                             }
                             MessageBox.Show("The open are " + open);
