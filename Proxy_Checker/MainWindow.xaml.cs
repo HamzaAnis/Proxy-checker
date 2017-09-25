@@ -251,6 +251,7 @@ namespace Proxy_Checker
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
+            int open = 0;
             if (btnFileLoad.Content.Equals("Load List"))
             {
                 MessageBox.Show("Please load a file", "Exception");
@@ -317,6 +318,7 @@ namespace Proxy_Checker
                                     tcpClient.Connect(database[j].IP, Int32.Parse(database[j].Port));
                                     Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
                                                       "  :  Port open");
+                                    open++;
                                 }
                                 catch (Exception)
                                 {
@@ -324,8 +326,9 @@ namespace Proxy_Checker
                                                       "   :Port closed");
                                     tcpClient.Close();
                                 }
+
                                 //                                var client = new TcpClient();
-                                //                                var result = client.BeginConnect("https://www.google.com.pk/", 8080, null, null);
+                                //                                var result = client.BeginConnect(database[j].IP, 8080, null, null);
                                 //
                                 //                                var success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(1));
                                 //
@@ -335,10 +338,24 @@ namespace Proxy_Checker
                                 //                                }
                                 //                                else
                                 //                                {
-                                //
                                 //                                    Console.WriteLine("Sucessfully connect to :: " + database[j].IP + "  on port 80");
                                 //                                }
+                                var client = new TcpClient();
+                                if (!client.ConnectAsync(database[j].IP, Int32.Parse(database[j].Port)).Wait(1000))
+                                {
+                                    Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
+                                                      "   :Port closed");
+
+                                    // connection failure
+                                }
+                                else
+                                {
+                                    Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
+                                                      "  :  Port open");
+                                    open++;
+                                }
                             }
+                            MessageBox.Show("The open are " + open);
                         });
                     }
                 }
