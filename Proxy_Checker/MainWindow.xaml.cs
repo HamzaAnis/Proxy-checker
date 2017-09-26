@@ -35,6 +35,7 @@ namespace Proxy_Checker
 
     public partial class MainWindow : Window
     {
+        public double chunkSize;
         public List<Proxy> database = new List<Proxy>();
         private string filename;
         public Proxy globalTemp;
@@ -96,8 +97,7 @@ namespace Proxy_Checker
                     bw.WorkerSupportsCancellation = true;
                     bw.WorkerReportsProgress = true;
 
-                    bw.DoWork +=
-                        readFile;
+                    bw.DoWork += readFile;
                     bw.ProgressChanged +=
                         bw_ProgressChanged;
                     bw.RunWorkerCompleted +=
@@ -278,47 +278,95 @@ namespace Proxy_Checker
                             statusProgress.IsIndeterminate = true;
                             lblStatus.Content = "Checking Proxies";
                         });
-                        var chunkSize = Math.Round( ((double)database.Count / (double)threads));
+                        chunkSize = Math.Round(database.Count / (double) threads);
 
+                        for (var i = 0; i < threads; i++)
+                        {
+                            var temp = new BackgroundWorker();
+                            temp.WorkerSupportsCancellation = true;
+                            temp.WorkerReportsProgress = true;
+
+                            temp.DoWork +=
+                                CheckProxyStatus;
+                            if (temp.IsBusy != true)
+                                temp.RunWorkerAsync(i);
+                        }
                         MessageBox.Show("The chunk  size is " + chunkSize + "Threads rae  " + threads + " length is " +
                                         database.Count);
-                        Task.Run(() =>
-                        {
-                            var ping = new Ping();
-                            for (var j = 0; j < database.Count; j++)
-                            {
-                                var pingCount = 0;
-                                while (pingCount != 2)
-                                {
-                                    var client = new TcpClient();
-                                    if (!client.ConnectAsync(database[j].IP, int.Parse(database[j].Port)).Wait(1000))
-                                    {
-                                        Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
-                                                          "   :Port closed");
-
-                                        // connection failure
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
-                                                          "  :  Port open");
-                                        open++;
-                                        database[j].IsOpen = true;
-                                        break;
-                                        ;
-                                    }
-                                    pingCount++;
-                                }
-                            }
-                            MessageBox.Show("The open are " + open);
-                        });
+//                        Task.Run(() =>
+//                        {
+//                            var ping = new Ping();
+//                            for (var j = 0; j < database.Count; j++)
+//                            {
+//                                var pingCount = 0;
+//                                while (pingCount != 2)
+//                                {
+//                                    var client = new TcpClient();
+//                                    if (!client.ConnectAsync(database[j].IP, int.Parse(database[j].Port)).Wait(1000))
+//                                    {
+//                                        Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
+//                                                          "   :Port closed");
+//
+//                                        // connection failure
+//                                    }
+//                                    else
+//                                    {
+//                                        Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
+//                                                          "  :  Port open");
+//                                        open++;
+//                                        database[j].IsOpen = true;
+//                                        break;
+//                                        ;
+//                                    }
+//                                    pingCount++;
+//                                }
+//                            }
+//                            MessageBox.Show("The open are " + open);
+//                        });
                     }
                 }
             }
         }
 
-        public void CheckProxyStatus()
+        public void CheckProxyStatus(object sender, DoWorkEventArgs e)
         {
+            var worker = sender as BackgroundWorker;
+            if (worker.CancellationPending)
+            {
+                e.Cancel = true;
+            }
+            else
+            {
+                var number = (int) e.Argument;
+                var startingIndex = number * (int) chunkSize;
+                Console.Write("The number of the thread is " + number + "  and it will check from " +
+                              (startingIndex + 1) + "  to" + (startingIndex + (int) chunkSize) + "\n");
+                var ping = new Ping();
+                for (var j = 0; j < database.Count; j++)
+                {
+                    var pingCount = 0;
+                    while (pingCount != 2)
+                    {
+                        var client = new TcpClient();
+                        if (!client.ConnectAsync(database[j].IP, int.Parse(database[j].Port)).Wait(1000))
+                        {
+                            Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
+                                              "   :Port closed");
+
+                            // connection failure
+                        }
+                        else
+                        {
+                            Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
+                                              "  :  Port open");
+                            database[j].IsOpen = true;
+                            break;
+                            ;
+                        }
+                        pingCount++;
+                    }
+                }
+            }
         }
     }
 }
