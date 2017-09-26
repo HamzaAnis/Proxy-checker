@@ -40,9 +40,14 @@ namespace Proxy_Checker
         private string filename;
         public Proxy globalTemp;
 
+        public int good = 0;
+        public int bad = 0;
+        public int processed = 0;
         private List<BackgroundWorker> proxyWorker = new List<BackgroundWorker>();
         public int threads;
 
+        public bool checkSmtp = false;
+        public int smptCount = 0;
         public int threadCompleted = 0;
 
         public MainWindow()
@@ -247,6 +252,16 @@ namespace Proxy_Checker
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
+            if ((bool) (chckBox.IsChecked))
+            {
+                checkSmtp = true;
+            }
+            else
+            {
+                checkSmtp = false;
+            }
+
+            statisticsTXT.Text = string.Format("{0}\n{1}\n{2}\n{3}\n{4}", database.Count, processed, good, bad,smptCount);
             var open = 0;
             if (btnFileLoad.Content.Equals("Load List"))
             {
@@ -281,50 +296,24 @@ namespace Proxy_Checker
                             lblStatus.Content = "Checking Proxies";
                         });
                         chunkSize = Math.Round(database.Count / (double) threads);
-
-                        for (var i = 0; i < threads; i++)
+                        if (chunkSize > 0)
                         {
-                            var temp = new BackgroundWorker();
-                            temp.WorkerSupportsCancellation = true;
-                            temp.WorkerReportsProgress = true;
+                            for (var i = 0; i < threads; i++)
+                            {
+                                var temp = new BackgroundWorker();
+                                temp.WorkerSupportsCancellation = true;
+                                temp.WorkerReportsProgress = true;
 
-                            temp.DoWork +=
-                                CheckProxyStatus;
-                            if (temp.IsBusy != true)
-                                temp.RunWorkerAsync(i);
+                                temp.DoWork +=
+                                    CheckProxyStatus;
+                                if (temp.IsBusy != true)
+                                    temp.RunWorkerAsync(i);
+                            }
                         }
-//                        MessageBox.Show("The chunk  size is " + chunkSize + "Threads rae  " + threads + " length is " +
-//                                        database.Count);
-//                        Task.Run(() =>
-//                        {
-//                            var ping = new Ping();
-//                            for (var j = 0; j < database.Count; j++)
-//                            {
-//                                var pingCount = 0;
-//                                while (pingCount != 2)
-//                                {
-//                                    var client = new TcpClient();
-//                                    if (!client.ConnectAsync(database[j].IP, int.Parse(database[j].Port)).Wait(1000))
-//                                    {
-//                                        Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
-//                                                          "   :Port closed");
-//
-//                                        // connection failure
-//                                    }
-//                                    else
-//                                    {
-//                                        Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
-//                                                          "  :  Port open");
-//                                        open++;
-//                                        database[j].IsOpen = true;
-//                                        break;
-//                                        ;
-//                                    }
-//                                    pingCount++;
-//                                }
-//                            }
-//                            MessageBox.Show("The open are " + open);
-//                        });
+                        else
+                        {
+                            MessageBox.Show("The threads are more than the IP's. Please select valid threads");
+                        }
                     }
                 }
             }
@@ -392,7 +381,33 @@ namespace Proxy_Checker
 
         private void btnExport_Click(object sender, RoutedEventArgs e)
         {
+            if (lblStatus.Content.Equals("Task Completed"))
+            {
+                var file = @"Report_" + DateTime.Now.ToString("yyyy/MM/dd_HH:mm:ss") + ".csv";
 
+                using (var stream = File.CreateText(file))
+                {
+                    for (int i = 0; i < database.Count; i++)
+                    {
+                        if (i == 0)
+                        {
+                            stream.WriteLine("{0},{1},{2},{3}", "IP", "PORT", "Port Status", "Smtp Server");
+                        }
+                        string first = database[i].IP;
+                        string second = database[i].Port;
+                        string status = database[i].IsOpen.ToString();
+                        string smtpStatus = database[i].IsSmptOpen.ToString();
+                        string csvRow = string.Format("{0},{1},{2},{3}", first, second, status, smtpStatus);
+
+                        stream.WriteLine(csvRow);
+                    }
+                }
+                MessageBox.Show("The open are " + System.Reflection.Assembly.GetEntryAssembly().Location + file);
+            }
+            else
+            {
+                MessageBox.Show("Start the task and wait for completion");
+            }
         }
     }
 }
