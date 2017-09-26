@@ -43,6 +43,8 @@ namespace Proxy_Checker
         private List<BackgroundWorker> proxyWorker = new List<BackgroundWorker>();
         public int threads;
 
+        public int threadCompleted = 0;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -291,8 +293,8 @@ namespace Proxy_Checker
                             if (temp.IsBusy != true)
                                 temp.RunWorkerAsync(i);
                         }
-                        MessageBox.Show("The chunk  size is " + chunkSize + "Threads rae  " + threads + " length is " +
-                                        database.Count);
+//                        MessageBox.Show("The chunk  size is " + chunkSize + "Threads rae  " + threads + " length is " +
+//                                        database.Count);
 //                        Task.Run(() =>
 //                        {
 //                            var ping = new Ping();
@@ -338,35 +340,59 @@ namespace Proxy_Checker
             else
             {
                 var number = (int) e.Argument;
-                var startingIndex = number * (int) chunkSize;
-                Console.Write("The number of the thread is " + number + "  and it will check from " +
-                              (startingIndex + 1) + "  to" + (startingIndex + (int) chunkSize) + "\n");
-                var ping = new Ping();
-                for (var j = 0; j < database.Count; j++)
+                var startingIndex = 0;
+                if (number != 0)
                 {
-                    var pingCount = 0;
-                    while (pingCount != 2)
+                    startingIndex = number * (int) chunkSize;
+                }
+                var endIndex = startingIndex + (int) chunkSize;
+                Console.Write("The number of the thread is " + number + "  and it will check from " +
+                              (startingIndex + 1) + "  to" + endIndex + "\n");
+                var ping = new Ping();
+                for (var j = startingIndex; j < endIndex; j++)
+                {
+                    if (j < database.Count)
                     {
-                        var client = new TcpClient();
-                        if (!client.ConnectAsync(database[j].IP, int.Parse(database[j].Port)).Wait(1000))
+                        var pingCount = 0;
+                        while (pingCount != 2)
                         {
-                            Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
-                                              "   :Port closed");
+                            var client = new TcpClient();
+                            if (!client.ConnectAsync(database[j].IP, int.Parse(database[j].Port)).Wait(1000))
+                            {
+                                Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
+                                                  "   :Port closed");
 
-                            // connection failure
+                                // connection failure
+                            }
+                            else
+                            {
+                                Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
+                                                  "  :  Port open");
+                                database[j].IsOpen = true;
+                                break;
+                                ;
+                            }
+                            pingCount++;
                         }
-                        else
-                        {
-                            Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
-                                              "  :  Port open");
-                            database[j].IsOpen = true;
-                            break;
-                            ;
-                        }
-                        pingCount++;
                     }
                 }
+                threadCompleted++;
+                if (threadCompleted == threads)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        lblStatus.Content = "Task Completed";
+                        statusProgress.IsIndeterminate = false;
+                        statusProgress.Visibility = System.Windows.Visibility.Hidden;
+                        prgrsBar.IsIndeterminate = false;
+                    });
+                }
             }
+        }
+
+        private void btnExport_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
