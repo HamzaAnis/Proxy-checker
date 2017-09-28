@@ -98,25 +98,27 @@
                      IsIndeterminate="False"
                      x:Name="statusProgress"
                      Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="-27 -22 0 0" Visibility="Hidden" />
+            <TextBlock x:Name="statisticsTXT" TextWrapping="Wrap" Margin="160,-263,537.6,0"  Text="0 &#xA;0&#xA;0&#xA;0&#xA;0&#xA;" Height="100" FontFamily="Times New Roman" FontSize="16"/>
 
         </StackPanel>
         <Grid Grid.ColumnSpan="2" Margin="263,81.467,34.6,10.275" Grid.RowSpan="2" Grid.Row="1">
             <ScrollViewer BorderThickness="5" Margin="0,0,0,0">
-                <!--                <TextBlock x:Name="txtbox_Proxydetails" Style="{StaticResource MaterialDesignSubheadingTextBlock}"-->
+                <!--                <TextBlock x:Name="txtbox_Proxydetails" Style="{StaticResource MaterialDesignSubheading
+                }"-->
                 <!--                           Margin="0,0,0,0"-->
                 <!--                           ScrollViewer.HorizontalScrollBarVisibility="Auto"-->
                 <!--                           ScrollViewer.VerticalScrollBarVisibility="Auto"-->
                 <!--                           ScrollViewer.CanContentScroll="True" />-->
 
-<!--                <ListBox-->
-<!--                    Grid.ColumnSpan="2"-->
-<!--                    SelectionMode="Single"-->
-<!--                    VirtualizingPanel.IsContainerVirtualizable="True"-->
-<!--                    VirtualizingPanel.IsVirtualizing="True"-->
-<!--                    ScrollViewer.CanContentScroll="True"-->
-<!--                    ScrollViewer.HorizontalScrollBarVisibility="Auto"-->
-<!--                    ScrollViewer.VerticalScrollBarVisibility="Auto"-->
-<!--                    x:Name="txtbox_Proxydetails" />-->
+                <!--                <ListBox-->
+                <!--                    Grid.ColumnSpan="2"-->
+                <!--                    SelectionMode="Single"-->
+                <!--                    VirtualizingPanel.IsContainerVirtualizable="True"-->
+                <!--                    VirtualizingPanel.IsVirtualizing="True"-->
+                <!--                    ScrollViewer.CanContentScroll="True"-->
+                <!--                    ScrollViewer.HorizontalScrollBarVisibility="Auto"-->
+                <!--                    ScrollViewer.VerticalScrollBarVisibility="Auto"-->
+                <!--                    x:Name="txtbox_Proxydetails" />-->
 
                 <TextBlock
                     Grid.ColumnSpan="2"
@@ -135,6 +137,10 @@
                 ToolTip="Change to List mode" Margin="405,5.467,115.6,131.111" Content="List"
                 Height="Auto" Click="Button_Click_2" Grid.Row="1" Visibility="Hidden" />
 
+        <Button x:Name="btnExport" Style="{StaticResource MaterialDesignRaisedLightButton}"
+                ToolTip="Exporting data" Margin="35,160.2,426.6,11.4" Content="Export Results"
+                Height="Auto"  Grid.Row="3" Grid.ColumnSpan="1" Grid.RowSpan="1" Click="btnExport_Click" />
+
 
         <Button Style="{DynamicResource MaterialDesignRaisedDarkButton}"
                 Margin="35,86.889,343.6,155.275"
@@ -147,8 +153,10 @@
         <Border BorderBrush="Gainsboro" BorderThickness="1" HorizontalAlignment="Left" Height="184" Margin="25,215.889,0,0"
                 Grid.RowSpan="2" VerticalAlignment="Top" Width="233" Grid.Row="2">
             <Label
-                Content="Statistics:&#xD;&#xA;&#xD;&#xA;     Checking:&#xD;&#xA;        Remain: &#xD;&#xA;           Good:&#xD;&#xA;              Bad:&#xD;&#xA;           Errors:" />
+                Content="Statistics:&#xA;&#xA;&#xA;     Checking:&#xA;        Remain: &#xA;            Good:&#xA;              Bad:&#xA;            Smtp:" FontWeight="Bold" FontFamily="Times New Roman" FontSize="16" FontStyle="Italic" />
         </Border>
-        
+            <CheckBox x:Name="chckBox" Content="Check SMTP" Margin="55,174.2,179.6,244.8" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2"/>
+
+
     </Grid>
 </Window>

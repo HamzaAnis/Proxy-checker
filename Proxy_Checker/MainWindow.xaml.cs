@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
 using System.Net.NetworkInformation;
-using System.Net.Sockets;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -35,20 +36,20 @@ namespace Proxy_Checker
 
     public partial class MainWindow : Window
     {
+        public int bad;
+
+        public bool checkSmtp;
         public double chunkSize;
         public List<Proxy> database = new List<Proxy>();
         private string filename;
         public Proxy globalTemp;
 
-        public int good = 0;
-        public int bad = 0;
-        public int processed = 0;
+        public int good;
+        public int processed;
         private List<BackgroundWorker> proxyWorker = new List<BackgroundWorker>();
+        public int smptCount;
+        public int threadCompleted;
         public int threads;
-
-        public bool checkSmtp = false;
-        public int smptCount = 0;
-        public int threadCompleted = 0;
 
         public MainWindow()
         {
@@ -252,16 +253,19 @@ namespace Proxy_Checker
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            if ((bool) (chckBox.IsChecked))
-            {
+            good = 0;
+            processed = 0;
+            bad = 0;
+            smptCount = 0;
+            database.Clear();
+            if ((bool) chckBox.IsChecked)
                 checkSmtp = true;
-            }
             else
-            {
                 checkSmtp = false;
-            }
 
-            statisticsTXT.Text = string.Format("{0}\n{1}\n{2}\n{3}\n{4}", database.Count, processed, good, bad,smptCount);
+            statisticsTXT.Text = string.Format("{0}\n{1}\n{2}\n{3}\n{4}", database.Count, database.Count - processed,
+                good, bad,
+                smptCount);
             var open = 0;
             if (btnFileLoad.Content.Equals("Load List"))
             {
@@ -297,7 +301,6 @@ namespace Proxy_Checker
                         });
                         chunkSize = Math.Round(database.Count / (double) threads);
                         if (chunkSize > 0)
-                        {
                             for (var i = 0; i < threads; i++)
                             {
                                 var temp = new BackgroundWorker();
@@ -309,11 +312,8 @@ namespace Proxy_Checker
                                 if (temp.IsBusy != true)
                                     temp.RunWorkerAsync(i);
                             }
-                        }
                         else
-                        {
                             MessageBox.Show("The threads are more than the IP's. Please select valid threads");
-                        }
                     }
                 }
             }
@@ -331,9 +331,7 @@ namespace Proxy_Checker
                 var number = (int) e.Argument;
                 var startingIndex = 0;
                 if (number != 0)
-                {
                     startingIndex = number * (int) chunkSize;
-                }
                 var endIndex = startingIndex + (int) chunkSize;
                 Console.Write("The number of the thread is " + number + "  and it will check from " +
                               (startingIndex + 1) + "  to" + endIndex + "\n");
@@ -342,40 +340,85 @@ namespace Proxy_Checker
                 {
                     if (j < database.Count)
                     {
-                        var pingCount = 0;
-                        while (pingCount != 2)
-                        {
-                            var client = new TcpClient();
-                            if (!client.ConnectAsync(database[j].IP, int.Parse(database[j].Port)).Wait(1000))
-                            {
-                                Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
-                                                  "   :Port closed");
+                        var request = (HttpWebRequest) WebRequest.Create("http://google.com");
+                        request.Proxy = new WebProxy(database[j].IP, int.Parse(database[j].Port));
+                        request.UserAgent =
+                            "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36";
+                        request.Timeout = 2000;
 
-                                // connection failure
-                            }
-                            else
-                            {
-                                Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
-                                                  "  :  Port open");
-                                database[j].IsOpen = true;
-                                break;
-                                ;
-                            }
-                            pingCount++;
+                        try
+                        {
+                            var response = request.GetResponse();
+                            database[j].IsOpen = true;
+                            Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
+                                              "  :  Port open");
+                            good++;
                         }
+                        catch (Exception)
+                        {
+                            Console.WriteLine("It is not made " + database[j].IP + ":" + database[j].Port);
+                        }
+//                        var pingCount = 0;
+//                        while (pingCount != 3)
+//                        {
+//                            var client = new TcpClient();
+//                            if (!client.ConnectAsync(database[j].IP, int.Parse(database[j].Port)).Wait(1000))
+//                            {
+//                                Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
+//                                                  "   :Port closed");
+//                                // connection failure
+//                            }
+//                            else
+//                            {
+//                                Console.WriteLine(database[j].IP + "     Port = " + database[j].Port +
+//                                                  "  :  Port open");
+//                                database[j].IsOpen = true;
+//                                good++;
+//                                break;
+//                            }
+//                            pingCount++;
+//                        }
+//                        if (checkSmtp)
+//                            while (pingCount != 3)
+//                            {
+//                                var client = new TcpClient();
+//                                if (!client.ConnectAsync(database[j].IP, 25).Wait(1000))
+//                                {
+//                                    Console.WriteLine(database[j].IP + " SMTP    Port = " + 25 +
+//                                                      "   :Port closed");
+//                                }
+//                                else
+//                                {
+//                                    Console.WriteLine(database[j].IP + " SMTP   Port = " + 25 +
+//                                                      "  :  Port open");
+//                                    database[j].IsSmptOpen = true;
+//                                    smptCount++;
+//                                    break;
+//                                }
+//                                pingCount++;
+//                            }
                     }
+                    processed++;
+
+                    if (processed % 4 == 0)
+                        Dispatcher.Invoke(
+                            () =>
+                            {
+                                statisticsTXT.Text = string.Format("{0}\n{1}\n{2}\n{3}\n{4}", database.Count,
+                                    database.Count - processed, good, processed - good, smptCount);
+                            });
                 }
                 threadCompleted++;
                 if (threadCompleted == threads)
-                {
                     Dispatcher.Invoke(() =>
                     {
+                        statisticsTXT.Text = string.Format("{0}\n{1}\n{2}\n{3}\n{4}", database.Count, 0, good,
+                            processed - good, smptCount);
                         lblStatus.Content = "Task Completed";
                         statusProgress.IsIndeterminate = false;
-                        statusProgress.Visibility = System.Windows.Visibility.Hidden;
+                        statusProgress.Visibility = Visibility.Hidden;
                         prgrsBar.IsIndeterminate = false;
                     });
-                }
             }
         }
 
@@ -383,26 +426,26 @@ namespace Proxy_Checker
         {
             if (lblStatus.Content.Equals("Task Completed"))
             {
-                var file = @"Report_" + DateTime.Now.ToString("yyyy/MM/dd_HH:mm:ss") + ".csv";
+                var file = @"Report_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".csv";
 
                 using (var stream = File.CreateText(file))
                 {
-                    for (int i = 0; i < database.Count; i++)
+                    for (var i = 0; i < database.Count; i++)
                     {
                         if (i == 0)
+                            stream.WriteLine("{0},{1},{2}", "IP", "PORT", "Status");
+                        if (database[i].IsOpen || database[i].IsSmptOpen)
                         {
-                            stream.WriteLine("{0},{1},{2},{3}", "IP", "PORT", "Port Status", "Smtp Server");
+                            var first = database[i].IP;
+                            var second = database[i].Port;
+                            var status = database[i].IsOpen.ToString();
+                            var smtpStatus = database[i].IsSmptOpen.ToString();
+                            var csvRow = string.Format("{0},{1},{2}", first, second, status);
+                            stream.WriteLine(csvRow);
                         }
-                        string first = database[i].IP;
-                        string second = database[i].Port;
-                        string status = database[i].IsOpen.ToString();
-                        string smtpStatus = database[i].IsSmptOpen.ToString();
-                        string csvRow = string.Format("{0},{1},{2},{3}", first, second, status, smtpStatus);
-
-                        stream.WriteLine(csvRow);
                     }
                 }
-                MessageBox.Show("The open are " + System.Reflection.Assembly.GetEntryAssembly().Location + file);
+                MessageBox.Show("File is saved at location : " + Assembly.GetEntryAssembly().Location + file);
             }
             else
             {
